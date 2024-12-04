@@ -1,8 +1,11 @@
-import { supabase } from './supabase';
 import React, { useState } from 'react';
+import UserForm from './UserForm';
+import VoiceCodeGenerator from './Agent';
+import { supabase } from './supabase';
 
 function App() {
   const [session, setSession] = useState(null);
+  const [isFormComplete, setIsFormComplete] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => setSession(session));
@@ -10,34 +13,25 @@ function App() {
     supabase.auth.onAuthStateChange((_event, session) => setSession(session));
   }, []);
 
-  const handleLogin = async (email) => {
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    if (error) alert(error.message);
-    else alert('Check your email for the login link!');
-  };
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) console.error('Error logging out:', error.message);
-    setSession(null);
-  };
+  const handleFormSubmit = () => setIsFormComplete(true);
 
   if (!session) {
     return (
       <div>
         <h1>Login</h1>
         <input type="email" placeholder="Enter your email" id="email" />
-        <button onClick={() => handleLogin(document.getElementById('email').value)}>Login</button>
+        <button onClick={() => supabase.auth.signInWithOtp({ email: document.getElementById('email').value })}>
+          Login
+        </button>
       </div>
     );
   }
 
-  return (
-    <div>
-      <button onClick={handleLogout}>Logout</button>
-      <p>Welcome, {session.user.email}</p>
-    </div>
-  );
+  if (!isFormComplete) {
+    return <UserForm onSubmit={handleFormSubmit} />;
+  }
+
+  return <VoiceCodeGenerator />;
 }
 
 export default App;
