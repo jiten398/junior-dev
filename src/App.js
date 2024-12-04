@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserForm from './UserForm';
 import VoiceCodeGenerator from './Agent';
 import { supabase } from './supabase';
