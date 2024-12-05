@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './supabase';
+import './UserForm';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -62,19 +63,30 @@ function App() {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-green-400 to-green-600">
-      <div className="bg-white p-8 rounded-xl shadow-lg max-w-sm w-full">
-        <h1 className="text-3xl font-bold text-center text-green-600 mb-6">Welcome!</h1>
-        <p className="text-center text-gray-700 mb-4">You're logged in as {session.user.email}</p>
+    <div className="min-h-screen bg-gradient-to-b from-green-400 to-green-600">
+      {/* Topbar */}
+      <div className="bg-white shadow-md p-4 flex items-center justify-between fixed top-0 left-0 w-full">
+        {/* Email Display */}
+        <p className="text-gray-700">
+          Logged in as <span className="font-medium">{session.user.email}</span>
+        </p>
+
+        {/* Logout Button */}
         <button
           onClick={handleLogout}
           disabled={loading}
-          className="w-full p-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 transition duration-200"
+          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 transition duration-200"
         >
           {loading ? 'Logging out...' : 'Logout'}
         </button>
       </div>
+      
+      {/* Content Placeholder */}
+      <div className="pt-16 flex items-center justify-center">
+        <UserForm/>
+      </div>
     </div>
+
   );
 }
 
