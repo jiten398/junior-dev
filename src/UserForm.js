@@ -53,13 +53,77 @@ const UserForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" name="name" placeholder="Name" onChange={handleInputChange} />
-      <input type="text" name="jobRole" placeholder="Job Role" onChange={handleInputChange} />
-      <textarea name="jobDescription" placeholder="Job Description" onChange={handleInputChange} />
-      <input type="text" name="programmingLanguage" placeholder="Programming Language" onChange={handleInputChange} />
-      <input type="file" onChange={handleFileChange} />
-      <button type="submit">Submit</button>
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg space-y-6"
+    >
+      <h2 className="text-2xl font-bold text-center text-gray-800">User Details Form</h2>
+      
+      {/* Name Input */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600">Name</label>
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter your name"
+          onChange={handleInputChange}
+          className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Job Role Input */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600">Job Role</label>
+        <input
+          type="text"
+          name="jobRole"
+          placeholder="Enter your job role"
+          onChange={handleInputChange}
+          className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Job Description Input */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600">Job Description</label>
+        <textarea
+          name="jobDescription"
+          placeholder="Describe your job responsibilities"
+          onChange={handleInputChange}
+          rows="4"
+          className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ></textarea>
+      </div>
+
+      {/* Programming Language Input */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600">Programming Language</label>
+        <input
+          type="text"
+          name="programmingLanguage"
+          placeholder="Enter your preferred programming language"
+          onChange={handleInputChange}
+          className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Resume Upload */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600">Upload Resume</label>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          className="w-full mt-2 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="w-full p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+      >
+        Submit
+      </button>
     </form>
   );
 };
