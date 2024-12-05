@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './supabase';
-import './UserForm';
+import UserForm from './UserForm';
 
 function App() {
   const [session, setSession] = useState(null);
