@@ -37,61 +37,74 @@ const VoiceCodeGenerator = () => {
     return <div className="text-red-500">Browser doesn't support speech recognition.</div>;
   }
 
-  const handleGenerateCode = async () => {
-    setIsLoading(true);
-    try {
-      const messages = [
-        {
-          role: "system",
-          content: "You are an expert programmer. Answer to coding related questions and Generate clean, efficient, and well-commented code based on the user's request."
-        },
-        ...chatHistory,
-        {
-          role: "user",
-          content: `${transcript}`
+    const handleGenerateCode = async () => {
+      setIsLoading(true);
+      try {
+        // Collect user data (name, job role, programming language, etc.)
+        const userDetails = {
+          name,
+          jobRole,
+          jobDescription,
+          programmingLanguage,
+          experience,
+          education,
+          projects,
+        };
+    
+        // Format the system message with user details and parsed resume data
+        const systemMessage = `Your Name is ${userDetails.name} and you are an expert programmer in Programming Language ${userDetails.programmingLanguage}. you are interviewing for ${userDetails.company} for job role of ${userDetails.jobRole} which Job Description is ${userDetails.jobDescription} and you have Experiences about ${userDetails.experience} and this is ${userDetails.education} your Education you have made these ${userDetails.projects} Projects 
+        Your task is to answer to te questions and if needed generate clean, efficient, and well-commented code based on the user's request.`;
+    
+        // Add the system message along with the user’s input to the conversation history
+        const messages = [
+          { role: "system", content: systemMessage },
+          ...chatHistory,
+          {
+            role: "user",
+            content: `${transcript}`
+          }
+        ];
+    
+        const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.REACT_APP_MISTRAL_API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "mistral-large-latest",
+            messages: messages,
+            temperature: 0.4,
+            max_tokens: 2048
+          })
+        });
+    
+        const data = await response.json();
+    
+        if (!data || !data.choices) {
+          console.error('Unexpected API response:', data);
+          setGeneratedCode('Error: Unexpected API response');
+          return;
         }
-      ];
-
-      const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_MISTRAL_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "mistral-large-latest",
-          messages: messages,
-          temperature: 0.4,
-          max_tokens: 2048
-        })
-      });
-
-      const data = await response.json();
-      
-      if (!data || !data.choices) {
-        console.error('Unexpected API response:', data);
-        setGeneratedCode('Error: Unexpected API response');
-        return;
+    
+        const assistantResponse = data.choices[0]?.message?.content || 'No code generated';
+        setGeneratedCode(assistantResponse);
+    
+        setChatHistory([
+          ...chatHistory,
+          { role: "user", content: transcript },
+          { role: "assistant", content: assistantResponse }
+        ]);
+    
+        resetTranscript();
+    
+      } catch (error) {
+        console.error('Error generating code:', error);
+        setGeneratedCode('Error: Failed to generate code');
       }
-
-      const assistantResponse = data.choices[0]?.message?.content || 'No code generated';
-      setGeneratedCode(assistantResponse);
-      
-      setChatHistory([
-        ...chatHistory,
-        { role: "user", content: transcript },
-        { role: "assistant", content: assistantResponse }
-      ]);
-
-      resetTranscript();
-
-    } catch (error) {
-      console.error('Error generating code:', error);
-      setGeneratedCode('Error: Failed to generate code');
-    }
-    setIsLoading(false);
-  };
-
+      setIsLoading(false);
+    };
+   
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedCode);
   };
