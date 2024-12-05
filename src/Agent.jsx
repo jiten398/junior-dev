@@ -52,8 +52,15 @@ const VoiceCodeGenerator = () => {
         };
     
         // Format the system message with user details and parsed resume data
-        const systemMessage = `Your Name is ${userDetails.name} and you are an expert programmer in Programming Language ${userDetails.programmingLanguage}. you are interviewing for ${userDetails.company} for job role of ${userDetails.jobRole} which Job Description is ${userDetails.jobDescription} and you have Experiences about ${userDetails.experience} and this is ${userDetails.education} your Education you have made these ${userDetails.projects} Projects 
-        Your task is to answer to te questions and if needed generate clean, efficient, and well-commented code based on the user's request.`;
+        const systemMessage = `You are an expert programmer. Please consider the following details before generating the code:
+        - Name: ${userDetails.name}
+        - Job Role: ${userDetails.jobRole}
+        - Job Description: ${userDetails.jobDescription}
+        - Programming Language: ${userDetails.programmingLanguage}
+        - Experience: ${userDetails.experience}
+        - Education: ${userDetails.education}
+        - Projects: ${userDetails.projects}
+        Your task is to answer and if needed generate clean, efficient, and well-commented code based on the user's request.`;
     
         // Add the system message along with the user’s input to the conversation history
         const messages = [
