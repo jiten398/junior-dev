@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { supabase } from './supabase';
 import UserForm from './UserForm';
+import VoiceCodeGenerator from './Agent';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -63,32 +65,33 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-400 to-green-600">
-      {/* Topbar */}
-      <div className="bg-white shadow-md p-4 flex items-center justify-between fixed top-0 left-0 w-full">
-        {/* Email Display */}
-        <p className="text-gray-700">
-          Logged in as <span className="font-medium">{session.user.email}</span>
-        </p>
+    <Router>
+      <div className="min-h-screen bg-gradient-to-b from-green-400 to-green-600">
+        {/* Topbar */}
+        <div className="bg-white shadow-md p-4 flex items-center justify-between fixed top-0 left-0 w-full">
+          <p className="text-gray-700">
+            Logged in as <span className="font-medium">{session.user.email}</span>
+          </p>
 
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          disabled={loading}
-          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 transition duration-200"
-        >
-          {loading ? 'Logging out...' : 'Logout'}
-        </button>
-      </div>
-      
-      {/* Content Placeholder */}
-      <div className="pt-16 flex items-center justify-center">
-        <UserForm/>
-      </div>
-    </div>
+          <button
+            onClick={handleLogout}
+            disabled={loading}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-400 transition duration-200"
+          >
+            {loading ? 'Logging out...' : 'Logout'}
+          </button>
+        </div>
 
+        {/* Routes */}
+        <div className="pt-16">
+          <Routes>
+            <Route path="/" element={<UserForm />} />
+            <Route path="/chat" element={<VoiceCodeGenerator />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
 export default App;
-    
